@@ -1,9 +1,9 @@
 # project
 
-###Description of project goal:
+### Description of project goal:
 
-###Description of code:
+### Description of code:
 
-###Description of data:
+### Description of data:
 
-###Description of user interaction:
+### Description of user interaction:
