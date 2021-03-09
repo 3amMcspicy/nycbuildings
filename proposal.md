@@ -21,15 +21,20 @@ None
 Folium: Package to create the interactive map.
 FastAPI: To build the API 
 Pandas: Data processing
+Numpy: Data processing
 Streamlit: Webapp
 
 ### Description of data:
 Water consumption: https://data.cityofnewyork.us/Housing-Development/Water-Consumption-And-Cost-2013-2020-/66be-66yr
 Electricity Consumption: https://data.cityofnewyork.us/Housing-Development/Electric-Consumption-And-Cost-2010-April-2020-/jr24-e7cr
-Both datasets are provided by NYCHA through NYC open data that can be accessed through REST API.
+Both datasets are provided by NYCHA through NYC open data that can be accessed through REST API in the format of JSON.
 
 The data is then mapped using the NYCHA residential addresss dataset https://data.cityofnewyork.us/Housing-Development/NYCHA-Residential-Addresses/3ub5-4ph8. Which has longitude and latitude coordinates.
 
 
 The Tenant Data System (TDS) number helps link all the three datasets together.
 
+Output:
+
+### Existing similar webapp:
+https://energy.cusp.nyu.edu/#/ is a heatmap that allows for quick visualization. However, the map is displaying data that is calculated to fit their metrics. My website will be providing untouched data on water/electricity consumption.
