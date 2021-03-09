@@ -18,9 +18,18 @@ Users will access the website through the link. There will be a map of New York 
 None
 
 ### Description of code:
-Unsure yet. 
-streamlit as an interactive webpage.
+Folium: Package to create the interactive map.
+FastAPI: To build the API 
+Pandas: Data processing
+Streamlit: Webapp
 
 ### Description of data:
-Dataset is provided by NYCHA through NYC open data
+Water consumption: https://data.cityofnewyork.us/Housing-Development/Water-Consumption-And-Cost-2013-2020-/66be-66yr
+Electricity Consumption: https://data.cityofnewyork.us/Housing-Development/Electric-Consumption-And-Cost-2010-April-2020-/jr24-e7cr
+Both datasets are provided by NYCHA through NYC open data that can be accessed through REST API.
+
+The data is then mapped using the NYCHA residential addresss dataset https://data.cityofnewyork.us/Housing-Development/NYCHA-Residential-Addresses/3ub5-4ph8. Which has longitude and latitude coordinates.
+
+
+The Tenant Data System (TDS) number helps link all the three datasets together.
 
