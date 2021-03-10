@@ -18,11 +18,11 @@ Users will access the website through the link. There will be a map of New York 
 None
 
 ### Description of code:
-Folium: Package to create the interactive map.\
-FastAPI: To build the API \ 
-Pandas: Data processing\
-Numpy: Data processing\
-Streamlit: Webapp \
+Folium: Package to create the interactive map.  
+FastAPI: To build the API  
+Pandas: Data processing  
+Numpy: Data processing  
+Streamlit: Webapp  
 
 ### Description of data:
 Water consumption: https://data.cityofnewyork.us/Housing-Development/Water-Consumption-And-Cost-2013-2020-/66be-66yr
