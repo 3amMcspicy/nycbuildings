@@ -37,4 +37,4 @@ The Tenant Data System (TDS) number helps link all the three datasets together.
 Output:
 
 ### Existing similar webapp:
-https://energy.cusp.nyu.edu/#/ is a heatmap that allows for quick visualization. However, the map is displaying data that is calculated to fit their metrics. My website will be providing untouched data on water/electricity consumption.
+https://github.com/streamlit/demo-uber-nyc-pickups is a map that allows for quick visualization of the uber pickups in New York City. Visually my map would be similar to this.
