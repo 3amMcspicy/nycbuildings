@@ -34,6 +34,8 @@ This section is to remove columns that are unnecessary for mapping the data,
 to save space and computation power. Tables will be merged with TDS # and 
 any inconsistent data will be removed. Note that the column names in the dataframe
 is formatted differently than the names in the comments.
+
+The TDS # in the processed dataframe is not a string but saved as an int.
 """
 
 #Processing water consumption data
@@ -41,6 +43,8 @@ is formatted differently than the names in the comments.
 The columns kept from this dataset are:
 Development Name, Borough, Account Name, Location, TDS #, EDP, Revenue Month,
 Service Start Date, Service End Date, Current Charges, Consumption (HCF)
+
+TODO: remove empty entries where TDS is Null
 """
 
 def water_clean():
@@ -58,6 +62,8 @@ def water_clean():
 The columns kept from this dataset are:
 Development Name, Borough, Account Name, Location, TDS #, EDP, Revenue Month,
 Service Start Date, Service End Date, Current Charges, Consumption (KWH)
+
+TODO: remove empty entries where TDS is Null
 """
 def electricity_clean():
     data = electricity_consumption_data()
@@ -79,6 +85,7 @@ def coordinate_clean():
                             'borough', 'house', 'street','address','city',
                             'latitude','longitude']]
     return data_formatted
+
 
 
 #Merging the data with coordinates. 
