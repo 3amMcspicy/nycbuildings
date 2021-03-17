@@ -44,15 +44,21 @@ The columns kept from this dataset are:
 Development Name, Borough, Account Name, Location, TDS #, EDP, Revenue Month,
 Service Start Date, Service End Date, Current Charges, Consumption (HCF)
 
-TODO: remove empty entries where TDS is Null
+TODO: remove empty entries where TDS is Null. Might consider adding them if basic maps work first.
+
 """
 
 def water_clean():
     data = water_consumption_data()
+
+    #selecting columns
     data_formatted = data[['development_name', 'borough', 'account_name',
                             'location', 'tds', 'edp', 'revenue_month',
                             'service_start_date', 'service_end_date',
                             'current_charges', 'consumption_hcf']]
+    
+    #removes NaN or null values in TDS column
+    data_formatted = data_formatted.loc[pd.notna(data_formatted['tds'])]
     return data_formatted
 
 
@@ -67,10 +73,15 @@ TODO: remove empty entries where TDS is Null
 """
 def electricity_clean():
     data = electricity_consumption_data()
+
+    #selecting columns
     data_formatted = data[['development_name', 'borough', 'account_name',
                             'location', 'tds', 'edp', 'revenue_month',
                             'service_start_date', 'service_end_date',
                             'current_charges', 'consumption_kwh']]
+    
+    #removes NaN or null values in TDS column
+    data_formatted = data_formatted.loc[pd.notna(data_formatted['tds'])]
     return data_formatted
 
 #Processing coordinates data
@@ -78,12 +89,17 @@ def electricity_clean():
 The columns kept from this dataset are:
 DEVELOPMENT, TDS #, BUILDING #, BOROUGH, HOUSE #, STREET, ADDRESS, CITY, LATITUDE,
 LONGTITUDE
+
+This dataset does not have NaN values in TDS, no processing needed.
 """
 def coordinate_clean():
     data = coordinate_data()
+
+    #selecting columns
     data_formatted = data[['development', 'tds', 'building',
                             'borough', 'house', 'street','address','city',
                             'latitude','longitude']]
+    
     return data_formatted
 
 
