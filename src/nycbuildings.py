@@ -44,8 +44,9 @@ The columns kept from this dataset are:
 Development Name, Borough, Account Name, Location, TDS #, EDP, Revenue Month,
 Service Start Date, Service End Date, Current Charges, Consumption (HCF)
 
-TODO: remove empty entries where TDS is Null. Might consider adding them if basic maps work first.
-
+TODO: Consider adding null entries back if basic maps work. This will require
+      more work to convert street address to GPS coordinates. I.e. edge cases.
+TODO: Truncate values in 'Location' to only have numbers and cast to integer.
 """
 
 def water_clean():
@@ -69,7 +70,8 @@ The columns kept from this dataset are:
 Development Name, Borough, Account Name, Location, TDS #, EDP, Revenue Month,
 Service Start Date, Service End Date, Current Charges, Consumption (KWH)
 
-TODO: remove empty entries where TDS is Null
+TODO: Truncate values in 'Location' to only have numbers and cast to integer.
+TODO: Rename 'Location' to building number?
 """
 def electricity_clean():
     data = electricity_consumption_data()
@@ -83,6 +85,8 @@ def electricity_clean():
     #removes NaN or null values in TDS column
     data_formatted = data_formatted.loc[pd.notna(data_formatted['tds'])]
     return data_formatted
+
+
 
 #Processing coordinates data
 """
@@ -104,7 +108,26 @@ def coordinate_clean():
 
 
 
-#Merging the data with coordinates. 
+#Merging formatted datasets with the coordinates dataset. 
+"""
+This section is to merge the coordinates dataset with the other two dataset individually.
+If all 3 were merged together, it is likely to lose more entry points.
+The website displays electricity or water consumption, not both at the same time.
+"""
+
+#Water + GPS
+"""
+Merging dataset based on TDS and building number
+"""
+
+
+#Electricity + GPS
+
+
+
+
+
+
 
 
 #Plotting map coordinates
