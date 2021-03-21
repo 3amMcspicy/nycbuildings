@@ -128,14 +128,15 @@ The website displays electricity or water consumption, not both at the same time
 """
 Merging dataset based on TDS and building number
 
-There's only 104 entries. The data processing to fit to the GPS data removed many potential water consumption data
+There's only 104 entries. 
+The data processing to fit to the GPS data removed many potential water consumption data
 """
-def merge_water_gps:
+def merge_water_gps():
     a1 = coordinate_clean()
     a2 = water_clean()
     a3 = a1.merge(a2, left_on = ['tds', 'building'], right_on = ['tds', 'location'])
 
-return a3
+    return a3
 
 
 #Electricity + GPS
