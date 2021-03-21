@@ -1,5 +1,5 @@
 import streamlit as st
-import requests
+import pydeck as pdk
 import pandas as pd
 import numpy as np 
 
@@ -44,10 +44,11 @@ The columns kept from this dataset are:
 Development Name, Borough, Account Name, Location, TDS #, EDP, Revenue Month,
 Service Start Date, Service End Date, Current Charges, Consumption (HCF)
 
-TODO: Consider adding null entries back if basic maps work. This will require
+TODO: Consider adding null entries back for TDS if basic maps work. This will require
       more work to convert street address to GPS coordinates. I.e. edge cases.
-TODO: Truncate values in 'Location' to only have numbers and cast to integer.
-TODO: TDS # is an object type, not int64. So it needs to be casted.
+TODO: Consider adding entries with location that does not start with BLD back as points
+TODO: Consider entires that could not merge with GPS dataset
+
 """
 
 def water_clean():
@@ -79,10 +80,11 @@ The columns kept from this dataset are:
 Development Name, Borough, Account Name, Location, TDS #, EDP, Revenue Month,
 Service Start Date, Service End Date, Current Charges, Consumption (KWH)
 
-TODO: Truncate values in 'Location' to only have numbers and cast to integer.
-TODO: Rename 'Location' to building number?
+TODO: Consider adding null entries back for TDS if basic maps work. This will require
+      more work to convert street address to GPS coordinates. I.e. edge cases.
+TODO: Consider adding entries with location that does not start with BLD back as points
+TODO: Consider entires that could not merge with GPS dataset
 
-no need to cast tds to int.
 """
 def electricity_clean():
     data = electricity_consumption_data()
@@ -150,6 +152,7 @@ def merge_water_gps():
 """
 Merging electricity dataset with Coordinates based on TDS and building number.
 
+There's only 379 columns
 """
 def merge_electricty_gps():
     a1 = coordinate_clean()
@@ -161,9 +164,57 @@ def merge_electricty_gps():
 
 
 
+#Building the map
+"""
+This section of the code is to build the map for the users
+"""
+
+
+#Laying out top section of the APP
+row_1, row_2 = st.beta_columns((2,3))
+
+with row_1:
+    st.title("NYCHA electricy and water consumption data")
+
+with row_2:
+    st.write(
+    """
+    ##
+    Examing how water consumption and electricity consumption in NYCHA developments. 
+    The slider provides changes in consumption over time for some buildings.
+    """    
+    )
+
+#test with water data
+data = merge_water_gps()
+
 
 #Plotting map coordinates
 # Map functions 
+def map(data, lat, lon, zoom):
+    st.write(pdk.Deck(
+        map_style="mapbox://styles/mapbox/dark-v10",
+        initial_view_state={
+            "latitude": lat,
+            "longitude": lon,
+            "zoom": zoom,
+            "pitch": 50,
+        },
+        layers=[
+            pdk.Layer(
+                "HexagonLayer",
+                data=data,
+                get_position=["lon", "lat"],
+                radius=100,
+                elevation_scale=4,
+                elevation_range=[0, 1000],
+                pickable=True,
+                extruded=True,
+            ),
+        ]
+    ))
+
+
 # Filtering data by year/month selected
 # Filtering data by electricity/water
 
