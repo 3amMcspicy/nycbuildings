@@ -47,6 +47,7 @@ Service Start Date, Service End Date, Current Charges, Consumption (HCF)
 TODO: Consider adding null entries back if basic maps work. This will require
       more work to convert street address to GPS coordinates. I.e. edge cases.
 TODO: Truncate values in 'Location' to only have numbers and cast to integer.
+TODO: TDS # is an object type, not int64. So it needs to be casted.
 """
 
 def water_clean():
@@ -59,7 +60,15 @@ def water_clean():
                             'current_charges', 'consumption_hcf']]
     
     #removes NaN or null values in TDS column
-    data_formatted = data_formatted.loc[pd.notna(data_formatted['tds'])]
+    data_formatted = data_formatted.loc[(pd.notna(data_formatted['tds'])) & (data_formatted['tds'] != '#N/A')]
+    
+    #casting TDS to int
+    data_formatted['tds'] = pd.to_numeric(data_formatted['tds'])
+    
+    #For location, selecting only those with BLD and extracting the number
+    data_formatted = data_formatted[data_formatted.location.str.contains('BLD', na =False)]
+    data_formatted['location'] = data_formatted['location'].str.replace(r'\D', '').astype(int)
+
     return data_formatted
 
 
@@ -118,11 +127,22 @@ The website displays electricity or water consumption, not both at the same time
 #Water + GPS
 """
 Merging dataset based on TDS and building number
+
+There's only 104 entries. The data processing to fit to the GPS data removed many potential water consumption data
 """
+def merge_water_gps:
+    a1 = coordinate_clean()
+    a2 = water_clean()
+    a3 = a1.merge(a2, left_on = ['tds', 'building'], right_on = ['tds', 'location'])
+
+return a3
 
 
 #Electricity + GPS
+"""
+Merging electricity dataset with Coordinates based on TDS and building number.
 
+"""
 
 
 
