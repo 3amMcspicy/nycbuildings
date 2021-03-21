@@ -4,10 +4,10 @@ import pandas as pd
 import numpy as np 
 
 #Task 1: Loading the Datasets 
-"""
-Line 6 to 29 is loading the dataset from NYC Open Data.
-Each function returns the dataset in pandas dataframe format.
-""" 
+
+# Line 6 to 29 is loading the dataset from NYC Open Data.
+# Each function returns the dataset in pandas dataframe format.
+ 
 #Fetching water consumption data
 def water_consumption_data():
     URL = "https://data.cityofnewyork.us/resource/66be-66yr.json"
@@ -29,27 +29,27 @@ def coordinate_data():
 
 
 #Task 2: Formatting Data - incomplete
-"""
-This section is to remove columns that are unnecessary for mapping the data,
-to save space and computation power. Tables will be merged with TDS # and 
-any inconsistent data will be removed. Note that the column names in the dataframe
-is formatted differently than the names in the comments.
 
-The TDS # in the processed dataframe is not a string but saved as an int.
-"""
+# This section is to remove columns that are unnecessary for mapping the data,
+# to save space and computation power. Tables will be merged with TDS # and 
+# any inconsistent data will be removed. Note that the column names in the dataframe
+# is formatted differently than the names in the comments.
+
+# The TDS # in the processed dataframe is not a string but saved as an int.
+
 
 #Processing water consumption data
-"""
-The columns kept from this dataset are:
-Development Name, Borough, Account Name, Location, TDS #, EDP, Revenue Month,
-Service Start Date, Service End Date, Current Charges, Consumption (HCF)
 
-TODO: Consider adding null entries back for TDS if basic maps work. This will require
-      more work to convert street address to GPS coordinates. I.e. edge cases.
-TODO: Consider adding entries with location that does not start with BLD back as points
-TODO: Consider entires that could not merge with GPS dataset
+# The columns kept from this dataset are:
+# Development Name, Borough, Account Name, Location, TDS #, EDP, Revenue Month,
+# Service Start Date, Service End Date, Current Charges, Consumption (HCF)
 
-"""
+# TODO: Consider adding null entries back for TDS if basic maps work. This will require
+#       more work to convert street address to GPS coordinates. I.e. edge cases.
+# TODO: Consider adding entries with location that does not start with BLD back as points
+# TODO: Consider entires that could not merge with GPS dataset
+
+
 
 def water_clean():
     data = water_consumption_data()
@@ -75,17 +75,17 @@ def water_clean():
 
 
 #Processing electricity consumption data
-"""
-The columns kept from this dataset are:
-Development Name, Borough, Account Name, Location, TDS #, EDP, Revenue Month,
-Service Start Date, Service End Date, Current Charges, Consumption (KWH)
 
-TODO: Consider adding null entries back for TDS if basic maps work. This will require
-      more work to convert street address to GPS coordinates. I.e. edge cases.
-TODO: Consider adding entries with location that does not start with BLD back as points
-TODO: Consider entires that could not merge with GPS dataset
+# The columns kept from this dataset are:
+# Development Name, Borough, Account Name, Location, TDS #, EDP, Revenue Month,
+# Service Start Date, Service End Date, Current Charges, Consumption (KWH)
 
-"""
+# TODO: Consider adding null entries back for TDS if basic maps work. This will require
+#       more work to convert street address to GPS coordinates. I.e. edge cases.
+# TODO: Consider adding entries with location that does not start with BLD back as points
+# TODO: Consider entires that could not merge with GPS dataset
+
+
 def electricity_clean():
     data = electricity_consumption_data()
 
@@ -107,13 +107,13 @@ def electricity_clean():
 
 
 #Processing coordinates data
-"""
-The columns kept from this dataset are:
-DEVELOPMENT, TDS #, BUILDING #, BOROUGH, HOUSE #, STREET, ADDRESS, CITY, LATITUDE,
-LONGTITUDE
 
-This dataset does not have NaN values in TDS, no processing needed.
-"""
+# The columns kept from this dataset are:
+# DEVELOPMENT, TDS #, BUILDING #, BOROUGH, HOUSE #, STREET, ADDRESS, CITY, LATITUDE,
+# LONGTITUDE
+
+# This dataset does not have NaN values in TDS, no processing needed.
+
 def coordinate_clean():
     data = coordinate_data()
 
@@ -127,19 +127,19 @@ def coordinate_clean():
 
 
 #Merging formatted datasets with the coordinates dataset. 
-"""
-This section is to merge the coordinates dataset with the other two dataset individually.
-If all 3 were merged together, it is likely to lose more entry points.
-The website displays electricity or water consumption, not both at the same time.
-"""
+
+# This section is to merge the coordinates dataset with the other two dataset individually.
+# If all 3 were merged together, it is likely to lose more entry points.
+# The website displays electricity or water consumption, not both at the same time.
+
 
 #Water + GPS
-"""
-Merging dataset based on TDS and building number
 
-There's only 104 entries. 
-The data processing to fit to the GPS data removed many potential water consumption data
-"""
+# Merging dataset based on TDS and building number
+
+# There's only 104 entries. 
+# The data processing to fit to the GPS data removed many potential water consumption data
+
 def merge_water_gps():
     a1 = coordinate_clean()
     a2 = water_clean()
@@ -149,11 +149,11 @@ def merge_water_gps():
 
 
 #Electricity + GPS
-"""
-Merging electricity dataset with Coordinates based on TDS and building number.
+# """
+# Merging electricity dataset with Coordinates based on TDS and building number.
 
-There's only 379 columns
-"""
+# There's only 379 columns
+# """
 def merge_electricty_gps():
     a1 = coordinate_clean()
     a2 = electricity_clean()
@@ -165,9 +165,8 @@ def merge_electricty_gps():
 
 
 #Building the map
-"""
-This section of the code is to build the map for the users
-"""
+# This section of the code is to build the map for the users
+
 
 
 #Laying out top section of the APP
