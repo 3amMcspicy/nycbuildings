@@ -81,6 +81,8 @@ Service Start Date, Service End Date, Current Charges, Consumption (KWH)
 
 TODO: Truncate values in 'Location' to only have numbers and cast to integer.
 TODO: Rename 'Location' to building number?
+
+no need to cast tds to int.
 """
 def electricity_clean():
     data = electricity_consumption_data()
@@ -93,6 +95,11 @@ def electricity_clean():
     
     #removes NaN or null values in TDS column
     data_formatted = data_formatted.loc[pd.notna(data_formatted['tds'])]
+
+    #For location, selecting only those with BLD and extracting the number
+    data_formatted = data_formatted[data_formatted.location.str.contains('BLD', na =False)]
+    data_formatted['location'] = data_formatted['location'].str.replace(r'\D', '').astype(int)
+
     return data_formatted
 
 
@@ -144,8 +151,12 @@ def merge_water_gps():
 Merging electricity dataset with Coordinates based on TDS and building number.
 
 """
+def merge_electricty_gps():
+    a1 = coordinate_clean()
+    a2 = electricity_clean()
+    a3 = a1.merge(a2, left_on = ['tds', 'building'], right_on = ['tds', 'location'])
 
-
+    return a3
 
 
 
