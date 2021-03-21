@@ -214,7 +214,10 @@ def map(data, lat, lon, zoom):
         ]
     ))
 
+#Setting the midpoint of our map location
+midpoint = (np.average(data["latitude"]), np.average(data["longitude"]))
 
+map(data,midpoint[0], midpoint[1], 11)
 # Filtering data by year/month selected
 # Filtering data by electricity/water
 
