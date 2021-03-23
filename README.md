@@ -6,16 +6,12 @@ The project is to develop an interactive webapp to visualize electricity and wat
 
 Instructions for installing program:
 
-pip install streamlit
+```
+conda install pandas streamlit numpy pydeck -c conda-forge 
 
 git clone https://github.com/3amMcspicy/nycbuildings.git
 
-cd ./nycbuildings
-
-pip install -e .
-
-## To run a demo locally
-
-cd into src directory
+cd ./nycbuildings/src
 
 streamlit run nycbuildings.py
+```
