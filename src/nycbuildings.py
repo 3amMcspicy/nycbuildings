@@ -140,7 +140,7 @@ def coordinate_clean():
     #data=coordinate_data() <<as noted above, this data set only has 1000 rows so I switched to using your csv as a data source until we can figure out what's going on with the json data.
     #I renamed the columns of the csv data below to the names from the json data you were getting from the city so that subsequent code does not need to be changed again (hopefully) if you go back to using the json data
     #instead of the csv data.
-    data = pd.read_csv('/Users/alicesturm/hacks/nycbuildings/dataset/NYCHA_Residential_Addresses.csv').rename(columns={"DEVELOPMENT" : "development", "TDS #" : "tds", "BUILDING #" : "building", 
+    data = pd.read_csv('./nycbuildings/dataset/NYCHA_Residential_Addresses.csv').rename(columns={"DEVELOPMENT" : "development", "TDS #" : "tds", "BUILDING #" : "building", 
                         "BOROUGH" : "borough", "HOUSE #" : "house", "STREET" : "street", "ADDRESS" : "address", "CITY" : "city", "LATITUDE" : "latitude", "LONGITUDE" : "longitude"})
 
     #selecting columns
