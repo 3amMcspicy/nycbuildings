@@ -10,6 +10,9 @@ import numpy as np
  
 #Fetching water consumption data
 def water_consumption_data():
+    """
+    This function fetches water consumption data from NYC Open Data. Returns a pandas dataframe.
+    """
     URL = "https://data.cityofnewyork.us/resource/66be-66yr.json"
     raw_water = pd.read_json(URL)
     return raw_water
@@ -17,12 +20,19 @@ def water_consumption_data():
 
 #Fetching electricity consumption data
 def electricity_consumption_data():
+    """
+    This function fetches electricty consumption data from NYC Open Data. Returns a pandas dataframe.
+    """
     URL_2 = "https://data.cityofnewyork.us/resource/jr24-e7cr.json"
     raw_electricity = pd.read_json(URL_2)
     return raw_electricity
 
 #Fetching geo-coordinate data
 def coordinate_data():
+    """
+    this function fetches coordinate data from NYC Open Data. Returns a pandas dataframe. 
+    Alice note: this only returns 1000 rows of data, which is part of why there were so few rows at the end.
+    """
     URL_3 = "https://data.cityofnewyork.us/resource/3ub5-4ph8.json"
     raw_coordinate = pd.read_json(URL_3)
     return raw_coordinate
@@ -52,6 +62,10 @@ def coordinate_data():
 
 
 def water_clean():
+    """
+    This function processes the water consumption data from NYC Open Data by removing irrelevant columns, removing rows with null tds values, 
+    removing rows with null building number values, and converting the building number data to integer format.
+    """
     data = water_consumption_data()
 
     #selecting columns
@@ -87,23 +101,26 @@ def water_clean():
 
 
 def electricity_clean():
-    data = electricity_consumption_data()
-
+    """
+    This function processes the electricity consumption data from NYC Open Data by removing irrelevant columns, removing rows with null tds values, 
+    removing rows with null location values, and converting the location data to integer format.
+    """
+    data=electricity_consumption_data()
     #selecting columns
     data_formatted = data[['development_name', 'borough', 'account_name',
                             'location', 'tds', 'edp', 'revenue_month',
                             'service_start_date', 'service_end_date',
                             'current_charges', 'consumption_kwh']]
     
-    #removes NaN or null values in TDS column
+    #removes NaN or null values in TDS and location columns
     data_formatted = data_formatted.loc[pd.notna(data_formatted['tds'])]
+    data_formatted = data_formatted.loc[pd.notna(data_formatted['location'])]
 
-    #For location, selecting only those with BLD and extracting the number
+    #For location, selecting only those with BLD and extracting the number: this is causing errors. I havent investigated the data to see what is in the location column, but might need more/different cleaning. 
     data_formatted = data_formatted[data_formatted.location.str.contains('BLD', na =False)]
-    data_formatted['location'] = data_formatted['location'].str.replace(r'\D', '').astype(int)
+    data_formatted["location"]= data_formatted['location'].str.replace(r'\D','').astype(int)
 
     return data_formatted
-
 
 
 #Processing coordinates data
@@ -115,13 +132,24 @@ def electricity_clean():
 # This dataset does not have NaN values in TDS, no processing needed.
 
 def coordinate_clean():
-    data = coordinate_data()
+    """
+    this function selects only the columns of the coordinate data that are necessary for the analysis.
+    Alice note: I realized one of the reasons you were getting so few rows of data at the end is that the url for the data above has only 1000 rows, compared to the data in your data folder. I have pointed
+    this function at the csv data instead, as the coordinate data is unlikely to be frequently updated like the water and electricity data I assume. 
+    """
+    #data=coordinate_data() <<as noted above, this data set only has 1000 rows so I switched to using your csv as a data source until we can figure out what's going on with the json data.
+    #I renamed the columns of the csv data below to the names from the json data you were getting from the city so that subsequent code does not need to be changed again (hopefully) if you go back to using the json data
+    #instead of the csv data.
+    data = pd.read_csv('/Users/alicesturm/hacks/nycbuildings/dataset/NYCHA_Residential_Addresses.csv').rename(columns={"DEVELOPMENT" : "development", "TDS #" : "tds", "BUILDING #" : "building", 
+                        "BOROUGH" : "borough", "HOUSE #" : "house", "STREET" : "street", "ADDRESS" : "address", "CITY" : "city", "LATITUDE" : "latitude", "LONGITUDE" : "longitude"})
 
     #selecting columns
     data_formatted = data[['development', 'tds', 'building',
                             'borough', 'house', 'street','address','city',
                             'latitude','longitude']]
-    
+    #casting building to int
+    data_formatted['building'] = data_formatted['building'].str.replace(r'\D', '').astype(int)
+
     return data_formatted
 
 
@@ -140,12 +168,18 @@ def coordinate_clean():
 # There's only 104 entries. 
 # The data processing to fit to the GPS data removed many potential water consumption data
 
+
 def merge_water_gps():
+    """
+    This function combines the dataframe of coordinate data with the dataframe of water use data by tds number and building/location.
+    """
+
     a1 = coordinate_clean()
     a2 = water_clean()
-    a3 = a1.merge(a2, left_on = ['tds', 'building'], right_on = ['tds', 'location'])
-
+    a3 = a1.merge(a2, left_on = ['tds', 'building'], right_on = ['tds', 'location']) 
+    
     return a3
+
 
 
 #Electricity + GPS
@@ -154,7 +188,11 @@ def merge_water_gps():
 
 # There's only 379 columns
 # """
-def merge_electricty_gps():
+def merge_electricity_gps():
+    """
+    This function combines the dataframe of coordinate data with the dataframe of electricity use data by tds number and building/location.
+    """
+    
     a1 = coordinate_clean()
     a2 = electricity_clean()
     a3 = a1.merge(a2, left_on = ['tds', 'building'], right_on = ['tds', 'location'])
@@ -184,13 +222,18 @@ with row_2:
     """    
     )
 
-#test with water data
-data = merge_water_gps()
-
+#test
+waterdata = merge_water_gps()
+#elecdata=merge_electricity_gps()
+#print water data onto app (temporary, just for ease of troubleshooting/seeing how many records there are)
+st.write(waterdata)
 
 #Plotting map coordinates
 # Map functions 
 def map(data, lat, lon, zoom):
+    """
+    this function plots water consumption as bars using latitude and longitude.
+    """
     st.write(pdk.Deck(
         map_style="mapbox://styles/mapbox/dark-v10",
         initial_view_state={
@@ -203,9 +246,9 @@ def map(data, lat, lon, zoom):
             pdk.Layer(
                 "HexagonLayer",
                 data=data,
-                get_position=["lon", "lat"],
+                get_position=["longitude", "latitude"],
                 radius=100,
-                elevation_scale=4,
+                elevation_scale=1,
                 elevation_range=[0, 1000],
                 pickable=True,
                 extruded=True,
@@ -214,9 +257,10 @@ def map(data, lat, lon, zoom):
     ))
 
 #Setting the midpoint of our map location
-midpoint = (np.average(data["latitude"]), np.average(data["longitude"]))
+midpoint = (np.average(waterdata["latitude"]), np.average(waterdata["longitude"]))
 
-map(data,midpoint[0], midpoint[1], 11)
+map(waterdata,midpoint[0], midpoint[1], 11)
+#map(elecdata, midpoint[0], midpoint[1], 11)
 # Filtering data by year/month selected
 # Filtering data by electricity/water
 
