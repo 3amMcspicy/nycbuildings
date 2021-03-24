@@ -13,17 +13,18 @@ def water_consumption_data():
     """
     This function fetches water consumption data from NYC Open Data. Returns a pandas dataframe.
     """
-    URL = "https://data.cityofnewyork.us/resource/66be-66yr.json"
+    URL = "https://data.cityofnewyork.us/resource/66be-66yr.json?$limit=50000"
     raw_water = pd.read_json(URL)
     return raw_water
 
 
 #Fetching electricity consumption data
+#TODO: Electricity data has 315k entries, the current URL only takes 50k
 def electricity_consumption_data():
     """
     This function fetches electricty consumption data from NYC Open Data. Returns a pandas dataframe.
     """
-    URL_2 = "https://data.cityofnewyork.us/resource/jr24-e7cr.json"
+    URL_2 = "https://data.cityofnewyork.us/resource/jr24-e7cr.json?$limit=50000"
     raw_electricity = pd.read_json(URL_2)
     return raw_electricity
 
@@ -33,7 +34,7 @@ def coordinate_data():
     this function fetches coordinate data from NYC Open Data. Returns a pandas dataframe. 
     Alice note: this only returns 1000 rows of data, which is part of why there were so few rows at the end.
     """
-    URL_3 = "https://data.cityofnewyork.us/resource/3ub5-4ph8.json"
+    URL_3 = "https://data.cityofnewyork.us/resource/3ub5-4ph8.json?$limit=50000"
     raw_coordinate = pd.read_json(URL_3)
     return raw_coordinate
 
@@ -82,7 +83,7 @@ def water_clean():
     
     #For location, selecting only those with BLD and extracting the number
     data_formatted = data_formatted[data_formatted.location.str.contains('BLD', na =False)]
-    data_formatted['location'] = data_formatted['location'].str.replace(r'\D', '').astype(int)
+    data_formatted['location'] = data_formatted['location'].str.replace(r'\D', '').astype(str)
 
     return data_formatted
 
@@ -118,7 +119,7 @@ def electricity_clean():
 
     #For location, selecting only those with BLD and extracting the number: this is causing errors. I havent investigated the data to see what is in the location column, but might need more/different cleaning. 
     data_formatted = data_formatted[data_formatted.location.str.contains('BLD', na =False)]
-    data_formatted["location"]= data_formatted['location'].str.replace(r'\D','').astype(int)
+    data_formatted["location"]= data_formatted['location'].str.replace(r'\D','').astype(str)
 
     return data_formatted
 
@@ -140,15 +141,16 @@ def coordinate_clean():
     #data=coordinate_data() <<as noted above, this data set only has 1000 rows so I switched to using your csv as a data source until we can figure out what's going on with the json data.
     #I renamed the columns of the csv data below to the names from the json data you were getting from the city so that subsequent code does not need to be changed again (hopefully) if you go back to using the json data
     #instead of the csv data.
-    data = pd.read_csv('./nycbuildings/dataset/NYCHA_Residential_Addresses.csv').rename(columns={"DEVELOPMENT" : "development", "TDS #" : "tds", "BUILDING #" : "building", 
-                        "BOROUGH" : "borough", "HOUSE #" : "house", "STREET" : "street", "ADDRESS" : "address", "CITY" : "city", "LATITUDE" : "latitude", "LONGITUDE" : "longitude"})
+   #data = pd.read_csv('./nycbuildings/dataset/NYCHA_Residential_Addresses.csv').rename(columns={"DEVELOPMENT" : "development", "TDS #" : "tds", "BUILDING #" : "building", 
+    #                    "BOROUGH" : "borough", "HOUSE #" : "house", "STREET" : "street", "ADDRESS" : "address", "CITY" : "city", "LATITUDE" : "latitude", "LONGITUDE" : "longitude"})
+
+    data = coordinate_data()
 
     #selecting columns
     data_formatted = data[['development', 'tds', 'building',
                             'borough', 'house', 'street','address','city',
                             'latitude','longitude']]
-    #casting building to int
-    data_formatted['building'] = data_formatted['building'].str.replace(r'\D', '').astype(int)
+    
 
     return data_formatted
 
