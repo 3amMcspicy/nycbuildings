@@ -3,16 +3,19 @@
 """
 Loading datasets.
 """
-
+from water import Water
 from electricity import Electricity
 from coords import Coords
 
 
 class Data:
-    def __init__(self, **kwargs):
-        
+    def __init__(self, args, **kwargs):
+        self.power = args
         # get data and merge on 'tds'
-        self.data = Electricity().get_data(**kwargs)
+        if args == "Electricity":
+            self.data = Electricity().get_data(**kwargs)
+        else: 
+            self.data = Water().get_data(**kwargs)
         self.coords = Coords().get_all_data()
 
         # cleanup the data
@@ -41,8 +44,11 @@ class Data:
         """
         self.data.latitude = self.data.latitude.astype(float)
         self.data.longitude = self.data.longitude.astype(float)
-        self.data.year = self.data.year.astype(int)        
-        self.data.consumption_kwh = self.data.consumption_kwh.astype(float)
+        self.data.year = self.data.year.astype(int)     
+        if self.power == "Electricity": 
+            self.data.consumption_kwh = self.data.consumption_kwh.astype(float)
+        else:
+           self.data.consumption_hcf = self.data.consumption_hcf.astype(float)
 
 
     def add_year_column(self):
@@ -57,7 +63,13 @@ class Data:
         """
         Get difference in the mean consumption between years.
         """
-        self.tds_by_year = (
-            self.data.groupby(["tds", "year"])
-            .consumption_kwh.mean()
-        )
+        if self.power == "Electricity":
+            self.tds_by_year = (
+                self.data.groupby(["tds", "year"])
+                .consumption_kwh.mean()
+            )
+        else:
+            self.tds_by_year = (
+                self.data.groupby(["tds", "year"])
+                .consumption_hcf.mean()
+            )
