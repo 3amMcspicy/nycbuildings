@@ -3,7 +3,6 @@
 """
 A streamlit app
 """
-
 import streamlit as st
 from streamlit_folium import folium_static
 from data import Data
@@ -43,7 +42,8 @@ def build_maps(data, year1, year2):
     fmap = create_map(data, year1, year2)
     folium_static(fmap)
 
-
+borough_selection = st.sidebar.selectbox("Please choose a borough", ('MANHATTAN', 'BROOKLYN', 'QUEENS', 'BRONX', 'STATEN ISLAND'))
+dataset_selection = st.sidebar.selectbox("Please choose a dataset", ('Water', 'Electricity'))
 if __name__ == "__main__":
 
     # draw the webapp header
@@ -53,13 +53,14 @@ if __name__ == "__main__":
     # ...
 
     # for testing: subset data with kwargs
+    # Including option for borough
     KWARGS = {
-        "borough": "MANHATTAN",
+        "borough": borough_selection,
     }
 
     # load the data once
     with st.spinner(text='Loading data'):
-        DATA = Data(**KWARGS)
+        DATA = Data(dataset_selection, **KWARGS)
         st.success('App is ready')
 
     # draw the data matrix header
@@ -70,3 +71,4 @@ if __name__ == "__main__":
 
     # build toggle to show different maps given options...
     # ...
+    
