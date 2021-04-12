@@ -44,6 +44,12 @@ def build_maps(data, year1, year2):
 
 borough_selection = st.sidebar.selectbox("Please choose a borough", ('MANHATTAN', 'BROOKLYN', 'QUEENS', 'BRONX', 'STATEN ISLAND'))
 dataset_selection = st.sidebar.selectbox("Please choose a dataset", ('Water', 'Electricity'))
+
+
+
+
+
+
 if __name__ == "__main__":
 
     # draw the webapp header
@@ -56,6 +62,7 @@ if __name__ == "__main__":
     # Including option for borough
     KWARGS = {
         "borough": borough_selection,
+        
     }
 
     # load the data once
@@ -71,4 +78,20 @@ if __name__ == "__main__":
 
     # build toggle to show different maps given options...
     # ...
+    time = list(DATA.data.revenue_month.unique())
+    time.reverse()
+    time_selection = st.select_slider("Year-Month",time)
+    DATA_1 = DATA.data[DATA.data["revenue_month"] == time_selection]
+    #selected_time = {"revenue_month": time_selection}
+    st.write(DATA_1)
+    
+    
+    #with st.spinner(text='Loading data'):
+    #    DATA_1 = Data(dataset_selection, selected_time)
+    #    st.success('App is ready')
+    
+    #st.write(DATA_1.data.head(10))
+    #st.write(DATA.data.head(10))
+    #build_data_view(DATA_1)
+    #build_maps(DATA,2020, time_selection)
     
