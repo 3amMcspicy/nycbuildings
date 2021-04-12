@@ -91,5 +91,5 @@ if __name__ == "__main__":
         "borough": "MANHATTAN",
         "revenue_month": "2020-01",
     }
-    DATA = TEST.get_data_with_kwargs(KWARGS)
+    DATA = TEST.get_data(KWARGS)
     print(DATA.head())
