@@ -9,7 +9,7 @@ from coords import Coords
 
 
 class Data:
-    def __init__(self, args, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.power = args
         # get data and merge on 'tds'
         if args == "Electricity":
