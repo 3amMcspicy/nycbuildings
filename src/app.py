@@ -33,15 +33,14 @@ def build_header():
     row_1, row_2 = st.beta_columns((2, 3))
 
     with row_1:
-        st.title("NYCHA consumption data")
+        st.title("NYCHA Consumption Data")
 
     with row_2:
         st.write(
         """
         ##
         Examing how water and electricity consumption has changed over 
-        time in NYCHA developments. The slider can be used to change
-        the selected time over which to view changes in consumption.
+        time in NYCHA developments.
         """    
         )
     st.write("Please select the dataset and borough that you wish to visualize in the sidebar")
@@ -59,7 +58,8 @@ def build_maps(data, year1, year2):
     folium_static(fmap)
 
 
-
+def hex_map(data):
+    create_hex_map(DATA_1)
 
 
 
@@ -90,39 +90,51 @@ if __name__ == "__main__":
         DATA = Data(dataset_selection, **KWARGS)
         st.success('App is ready')
 
+
     # draw the data matrix header
-    build_data_view(DATA.tds_by_year)
+    #build_data_view(DATA.tds_by_year)
 
     # build several maps
-    build_maps(DATA, 2020, 2015)
+    #build_maps(DATA, 2020, 2015)
 
     # build toggle to show different maps given options...
     # ...
     time = list(DATA.data.revenue_month.unique())
     time.sort()
-    time_selection = st.select_slider("Year-Month",time)
+    #time_selection = st.select_slider("Year-Month",time)
     
-    with st.spinner(text='Loading data'):
+    #with st.spinner(text='Loading data'):
+        #DATA_1 = DATA.data[DATA.data["revenue_month"] == time_selection]
+        #st.success('App is ready')
+    
+    toggled_map = st.radio('Please select a map view', ('Mean consumption change between years', 
+                                'Visual consumption over month', 'Consumption by borough'))
+    
+    if toggled_map == 'Mean consumption change between years':
+        build_data_view(DATA.tds_by_year)
+        #need unique years as list of options then offer using st slider
+
+        build_maps(DATA, 2020, 2015)
+        st.write(
+            """
+            The map above shows the change in consumption* between the years selected. 
+            Red circles indicate a decrease, whilst green circles indicate an increase.
+
+            *consumption is the average consumption for that place in a year
+            """
+            )
+    
+    elif toggled_map == 'Visual consumption over month':
+        time_selection = st.select_slider("Year-Month",time)
+        #with st.spinner(text='Loading data'):
         DATA_1 = DATA.data[DATA.data["revenue_month"] == time_selection]
-        st.success('App is ready')
-    
-
-    
-    
-    st.write(DATA_1)
-    
-    create_hex_map(DATA_1)
+            #st.success('App is ready')
+        #st.write(DATA_1)
+        #time_selection = st.select_slider("Year-Month",time)
+        hex_map(DATA_1)
     
     
-    #st.write(DATA_1.data.head(10))
-    #st.write(DATA.data.head(10))
-    #build_data_view(DATA_1)
-    #build_maps(DATA,2020, time_selection)
     
 
 
-    """
-    have to press borough and dataset again to reload for some reason
-    2nd map glitches after a few runs. -> unable to zoom and then dataset does not change.
-    Which is weird because the dataset is changing.
-    """
+  
