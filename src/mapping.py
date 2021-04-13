@@ -3,11 +3,12 @@
 """
 Create folium maps
 """
-
+import numpy as np
 import pandas as pd
 import folium
 import branca.colormap as cm
-
+import pydeck as pdk
+import streamlit as st
 
 def create_map(data, year1, year2):
     """
@@ -22,9 +23,7 @@ def create_map(data, year1, year2):
 
     # use colorscale normalized by all years values
     colormap = cm.LinearColormap(
-        colors=['blue', 'red'], 
-        vmin=-50000,
-        vmax=50000,
+        colors=['green', 'red'], 
     )
 
     # get the difference in consumption between two years
@@ -53,3 +52,32 @@ def create_map(data, year1, year2):
 
     # show map
     return fmap
+
+#to create a map built with pydeck
+def create_hex_map(data):
+    data = data[["latitude","longitude","consumption_hcf"]]
+    midpoint = (np.average(data["latitude"]), np.average(data["longitude"]))
+    largest = int(data.consumption_hcf.max())
+    st.write(data)
+    st.write(pdk.Deck(
+        map_style="mapbox://styles/mapbox/dark-v10",
+        initial_view_state={
+            "latitude": midpoint[0],
+            "longitude": midpoint[1],
+            "zoom": 11,
+            "pitch": 50,
+        },
+        layers=[
+            pdk.Layer(
+                "HexagonLayer",
+                data=data,
+                get_position=["longitude", "latitude"],
+                radius=100,
+                elevation_scale=1,
+                elevation_range=[0, largest],
+                pickable=True,
+                extruded=True,
+            ),
+        ],
+        #tooltip = {"text": "Consumption: {consumption_hcf}"},
+    ))
