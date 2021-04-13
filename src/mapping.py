@@ -95,13 +95,32 @@ def create_hex_map(data):
 def chart_graph(data):
     chart_data = pd.DataFrame(data.tds_sum_year)
     chart_data.reset_index(inplace=True)
-    chart_data.pivot(index = 'tds', columns='year',values='consumption_hcf')
+    
+    if "consumption_hcf" in chart_data.columns:
+        chart_data.pivot(index = 'tds', columns='year',values='consumption_hcf')
+        fig, ax = plt.subplots()
+        for name, group in chart_data.groupby('tds'):
+            group.plot('year', y='consumption_hcf', ax=ax, label=name)
+        ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))    
+        st.pyplot(fig)
+    
+    else:    
+        chart_data.pivot(index = 'tds', columns='year',values='consumption_kwh')
+        fig, ax = plt.subplots()
+        for name, group in chart_data.groupby('tds'):
+            group.plot('year', y='consumption_kwh', ax=ax, label=name)
+        ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))    
+        st.pyplot(fig)
+
+    #chart_data = pd.DataFrame(data.tds_sum_year)
+    #chart_data.reset_index(inplace=True)
+    #chart_data.pivot(index = 'tds', columns='year',values='consumption_hcf')
     #st.write(chart_data)
-    fig, ax = plt.subplots()
-    for name, group in chart_data.groupby('tds'):
-        group.plot('year', y='consumption_hcf', ax=ax, label=name)
-    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))    
-    st.pyplot(fig)
+    #fig, ax = plt.subplots()
+    #for name, group in chart_data.groupby('tds'):
+        #group.plot('year', y='consumption_hcf', ax=ax, label=name)
+    #ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))    
+    #st.pyplot(fig)
     #st.pyplot(chart_data.plot.line().get_figure().savefig('output.png'))
     #c = alt.Chart(chart_data).mark_line().encode(x='year', y= 'consumption_hcf')
     #st.altair_chart(c, use_container_width= True)
