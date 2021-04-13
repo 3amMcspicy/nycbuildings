@@ -45,7 +45,7 @@ def create_map(data, year1, year2):
                 color=colormap(diff.loc[tds]),
                 fill=True,
                 tooltip=folium.Tooltip(
-                    text=f"tds={tds}, delta-consumption={diff.loc[tds]:.0f} KWH",
+                    text=f"tds={tds}, delta-consumption={diff.loc[tds]:.0f}",
                 )
             )
             fmap.add_child(marker)
@@ -55,10 +55,18 @@ def create_map(data, year1, year2):
 
 #to create a map built with pydeck
 def create_hex_map(data):
-    data = data[["latitude","longitude","consumption_hcf"]]
+    
+    if "consumption_kwh" in data.columns:
+        data = data[["latitude","longitude","consumption_kwh"]]
+        #largest = int(data.consumption_kwh.max())
+    else:    
+        data = data[["latitude","longitude","consumption_hcf"]]
+        #largest = int(data.consumption_hcf.max())
+    
+    #Calculation for midpoint of the GPS coordinates to zoom to
     midpoint = (np.average(data["latitude"]), np.average(data["longitude"]))
-    largest = int(data.consumption_hcf.max())
-    st.write(data)
+    
+    #st.write(data)
     st.write(pdk.Deck(
         map_style="mapbox://styles/mapbox/dark-v10",
         initial_view_state={
@@ -74,7 +82,7 @@ def create_hex_map(data):
                 get_position=["longitude", "latitude"],
                 radius=100,
                 elevation_scale=1,
-                elevation_range=[0, largest],
+                elevation_range=[0, 1000],
                 pickable=True,
                 extruded=True,
             ),
