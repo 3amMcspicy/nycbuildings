@@ -10,11 +10,13 @@ from coords import Coords
 
 class Data:
     def __init__(self, *args, **kwargs):
-        self.power = args
+        self.power = ""
         # get data and merge on 'tds'
-        if args == "Electricity":
+        if  "Electricity" in args:
+            self.power = "Electricity"
             self.data = Electricity().get_data(**kwargs)
         else: 
+            self.power = "Water"
             self.data = Water().get_data(**kwargs)
         self.coords = Coords().get_all_data()
 
