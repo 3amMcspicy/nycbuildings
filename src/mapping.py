@@ -9,6 +9,8 @@ import folium
 import branca.colormap as cm
 import pydeck as pdk
 import streamlit as st
+import altair as alt
+import matplotlib.pyplot as plt
 
 def create_map(data, year1, year2):
     """
@@ -58,10 +60,10 @@ def create_hex_map(data):
     
     if "consumption_kwh" in data.columns:
         data = data[["latitude","longitude","consumption_kwh"]]
-        #largest = int(data.consumption_kwh.max())
+        
     else:    
         data = data[["latitude","longitude","consumption_hcf"]]
-        #largest = int(data.consumption_hcf.max())
+        
     
     #Calculation for midpoint of the GPS coordinates to zoom to
     midpoint = (np.average(data["latitude"]), np.average(data["longitude"]))
@@ -81,11 +83,25 @@ def create_hex_map(data):
                 data=data,
                 get_position=["longitude", "latitude"],
                 radius=100,
-                elevation_scale=1,
-                elevation_range=[0, 1000],
+                elevation_scale=3,
+                elevation_range=[0, 3000],
                 pickable=True,
                 extruded=True,
             ),
         ],
         #tooltip = {"text": "Consumption: {consumption_hcf}"},
     ))
+
+def chart_graph(data):
+    chart_data = pd.DataFrame(data.tds_sum_year)
+    chart_data.reset_index(inplace=True)
+    chart_data.pivot(index = 'tds', columns='year',values='consumption_hcf')
+    #st.write(chart_data)
+    fig, ax = plt.subplots()
+    for name, group in chart_data.groupby('tds'):
+        group.plot('year', y='consumption_hcf', ax=ax, label=name)
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))    
+    st.pyplot(fig)
+    #st.pyplot(chart_data.plot.line().get_figure().savefig('output.png'))
+    #c = alt.Chart(chart_data).mark_line().encode(x='year', y= 'consumption_hcf')
+    #st.altair_chart(c, use_container_width= True)
