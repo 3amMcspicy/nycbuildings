@@ -31,6 +31,8 @@ class Data:
 
         # add other pre-computed dataframes here 
         # ...
+        self.tds_sum_year = None
+        self.get_aggregate_data()
 
 
     def merge_coords(self):
@@ -74,4 +76,19 @@ class Data:
             self.tds_by_year = (
                 self.data.groupby(["tds", "year"])
                 .consumption_hcf.mean()
+            )
+
+    def get_aggregate_data(self):
+        """
+        Get the total consumption for each year
+        """
+        if self.power == "Electricity":
+            self.tds_sum_year = (
+                self.data.groupby(["tds", "year"])
+                .consumption_kwh.sum()
+            )
+        else:
+            self.tds_sum_year = (
+                self.data.groupby(["tds", "year"])
+                .consumption_hcf.sum()
             )
