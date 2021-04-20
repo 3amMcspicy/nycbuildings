@@ -12,10 +12,10 @@ class Data:
     def __init__(self, *args, **kwargs):
         self.power = ""
         # get data and merge on 'tds'
-        if  "Electricity" in args:
+        if "Electricity" in args:
             self.power = "Electricity"
             self.data = Electricity().get_data(**kwargs)
-        else: 
+        else:
             self.power = "Water"
             self.data = Water().get_data(**kwargs)
         self.coords = Coords().get_all_data()
@@ -29,66 +29,55 @@ class Data:
         self.tds_by_year = None
         self.get_by_year_data()
 
-        # add other pre-computed dataframes here 
+        # add other pre-computed dataframes here
         # ...
         self.tds_sum_year = None
         self.get_aggregate_data()
 
-
+    # Merging coordinates with other datasets on TDS value
     def merge_coords(self):
         """
         Merge the coords into (lat,long) into the data
         """
-        self.data = self.data.merge(self.coords, on='tds')
+        self.data = self.data.merge(self.coords, on="tds")
 
-
+    # Setting the datatype of the merged dataset
     def set_dtypes(self):
         """
         Set the datatypes to intended types
         """
         self.data.latitude = self.data.latitude.astype(float)
         self.data.longitude = self.data.longitude.astype(float)
-        self.data.year = self.data.year.astype(int)     
-        if self.power == "Electricity": 
+        self.data.year = self.data.year.astype(int)
+        if self.power == "Electricity":
             self.data.consumption_kwh = self.data.consumption_kwh.astype(float)
         else:
-           self.data.consumption_hcf = self.data.consumption_hcf.astype(float)
+            self.data.consumption_hcf = self.data.consumption_hcf.astype(float)
 
-
+    # Adding a year column from the revenue month column
     def add_year_column(self):
         """
         Create a new column with the year from revenue_month
         """
-        years = self.data['revenue_month'].apply(lambda x: int(x.split("-")[0]))
-        self.data['year'] = years
-     
+        years = self.data["revenue_month"].apply(lambda x: int(x.split("-")[0]))
+        self.data["year"] = years
 
+    # Getting the mean consumption for each year
     def get_by_year_data(self):
         """
         Get difference in the mean consumption between years.
         """
         if self.power == "Electricity":
-            self.tds_by_year = (
-                self.data.groupby(["tds", "year"])
-                .consumption_kwh.mean()
-            )
+            self.tds_by_year = self.data.groupby(["tds", "year"]).consumption_kwh.mean()
         else:
-            self.tds_by_year = (
-                self.data.groupby(["tds", "year"])
-                .consumption_hcf.mean()
-            )
+            self.tds_by_year = self.data.groupby(["tds", "year"]).consumption_hcf.mean()
 
+    # Getting the total consumption for each year
     def get_aggregate_data(self):
         """
         Get the total consumption for each year
         """
         if self.power == "Electricity":
-            self.tds_sum_year = (
-                self.data.groupby(["tds", "year"])
-                .consumption_kwh.sum()
-            )
+            self.tds_sum_year = self.data.groupby(["tds", "year"]).consumption_kwh.sum()
         else:
-            self.tds_sum_year = (
-                self.data.groupby(["tds", "year"])
-                .consumption_hcf.sum()
-            )
+            self.tds_sum_year = self.data.groupby(["tds", "year"]).consumption_hcf.sum()
