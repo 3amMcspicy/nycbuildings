@@ -7,7 +7,7 @@ Fetch data from REST API
 import requests
 import pandas as pd
 
-#URL for water dataset
+# URL for water dataset
 WATER = "https://data.cityofnewyork.us/resource/66be-66yr.json"
 COLUMNS = [
     # "development_name",
@@ -15,7 +15,7 @@ COLUMNS = [
     "location",
     "tds",
     "revenue_month",
-    "consumption_hcf"
+    "consumption_hcf",
 ]
 
 
@@ -23,12 +23,12 @@ class Water:
     """
     Request data from the REST API
     """
+
     def __init__(self):
         self.params = {
             "$offset": 0,
             "$limit": int(1e9),  # arbitrarily large to get all data
         }
-
 
     def get_all_data(self):
         """
@@ -45,7 +45,6 @@ class Water:
 
         # return as dataframe at selected columns
         return pd.json_normalize(response.json())[COLUMNS]
-
 
     def get_data_with_kwargs(self, **kwargs):
         """
@@ -65,7 +64,7 @@ class Water:
 
         # subset to columns of interest
         return data[COLUMNS]
-    
+
     def get_data(self, **kwargs):
         """
         Get data for only the specified month
@@ -83,6 +82,7 @@ class Water:
         data = pd.json_normalize(response.json())
         return data[COLUMNS]
 
+
 if __name__ == "__main__":
 
     # simple test for fetching Water data.
@@ -91,5 +91,5 @@ if __name__ == "__main__":
         "borough": "MANHATTAN",
         "revenue_month": "2020-01",
     }
-    DATA = TEST.get_data(KWARGS)
+    DATA = TEST.get_data(**KWARGS)
     print(DATA.head())
