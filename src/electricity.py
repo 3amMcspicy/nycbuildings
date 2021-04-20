@@ -15,7 +15,7 @@ COLUMNS = [
     "location",
     "tds",
     "revenue_month",
-    "consumption_kwh",    
+    "consumption_kwh",
 ]
 
 
@@ -23,12 +23,13 @@ class Electricity:
     """
     Request data from the REST API
     """
+
     def __init__(self):
         self.params = {
             "$offset": 0,
             "$limit": int(1e9),  # arbitrarily large to get all data
         }
-       
+
     def get_data(self, **kwargs):
         """
         Get data for only the specified month
@@ -45,7 +46,6 @@ class Electricity:
         # return as dataframe w/ subset columns
         data = pd.json_normalize(response.json())
         return data[COLUMNS]
-
 
 
 if __name__ == "__main__":
