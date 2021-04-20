@@ -20,11 +20,10 @@ COLUMNS = [
     "longitude",
 ]
 
-class Coords:
 
+class Coords:
     def __init__(self):
         self.params = {"$limit": int(1e9), "$offset": 0}
-
 
     def get_all_data(self):
         """
@@ -40,12 +39,11 @@ class Coords:
         response.raise_for_status()
 
         # return as dataframe at selected columns
-        data = pd.json_normalize(response.json())[COLUMNS]      
+        data = pd.json_normalize(response.json())[COLUMNS]
 
         # convert lat,long to floats
         data[["latitude", "longitude"]] = data[["latitude", "longitude"]].astype(float)
         return data
-
 
 
 if __name__ == "__main__":
