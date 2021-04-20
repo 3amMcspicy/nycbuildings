@@ -58,8 +58,8 @@ def hex_map(data):
 def display_example():
 
     # Loading the images from other directory
-    hexagon_image = Image.open("../map/hexagon_layer.jpg")
-    folium_image = Image.open("../map/folium_layer.jpg")
+    hexagon_image = Image.open("hexagon_layer.jpg")
+    folium_image = Image.open("folium_layer.jpg")
 
     # Displaying the images
     col1, col2 = st.beta_columns(2)
