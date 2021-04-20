@@ -81,7 +81,7 @@ if __name__ == "__main__":
     build_header()
 
     # Display an example while full data loads below the header
-    # display_example()
+    display_example()
 
     # Dataset and borough selection
     borough_selection = st.sidebar.selectbox(
