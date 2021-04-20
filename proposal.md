@@ -19,7 +19,7 @@ None
 
 ### Description of code:
 Folium: Package to create the interactive map.  
-FastAPI: To build the API  
+Pydeck: To build the Hexagon map 
 Pandas: Data processing  
 Numpy: Data processing  
 Streamlit: Webapp  
@@ -35,6 +35,7 @@ The data is then mapped using the NYCHA residential addresss dataset https://dat
 The Tenant Data System (TDS) number helps link all the three datasets together.
 
 Output:
+https://github.com/3amMcspicy/nycbuildings/blob/main/map/hexagon_layer.jpg
 
 ### Existing similar webapp:
 https://github.com/streamlit/demo-uber-nyc-pickups is a map that allows for quick visualization of the uber pickups in New York City. Visually my map would be similar to this.
