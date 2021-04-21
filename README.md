@@ -10,7 +10,7 @@ streamlit - To deploy the app on a browser\
 streamlit-folium - To display folium maps on streamlit\
 Numpy - For faster calculations\
 Pydeck - To display hexagonal map layers\
-Pillow - To open examples of what the map views should look like\
+Pillow - To open examples of what the map views should look like
 
 ### In development
 
